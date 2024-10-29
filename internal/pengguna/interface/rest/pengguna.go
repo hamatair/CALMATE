@@ -1,8 +1,10 @@
 package rest
 
 import (
+	"net/http"
 
 	"github.com/bccfilkom-be/go-server/internal/usecase"
+	"github.com/bccfilkom-be/go-server/pkg/model"
 	"github.com/bccfilkom-be/go-server/pkg/response"
 	"github.com/gin-gonic/gin"
 )
@@ -19,12 +21,31 @@ func NewPenggunaHandler(usecase *usecase.Usecase) *PenggunaHandler {
 	}
 }
 
+func (h *PenggunaHandler) PengunaRegister(c *gin.Context) {
+	param := model.PengunaRegister{}
+
+	err := c.ShouldBindJSON(&param)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "failed to bind input", err)
+		return
+	}
+
+	err = h.Usecase.PenggunaUsecase.RegisterPengguna(param)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, "failed to register new user", err)
+		return
+	}
+
+	response.Success(c, http.StatusCreated, "success register new user", nil)
+}
+
 // GetPengguna method handler untuk endpoint /tes
-func (h *PenggunaHandler) GetPengguna(c *gin.Context) {
-	// Logic untuk mendapatkan data pengguna, bisa menggunakan usecase
-	// Misalnya, kita panggil `h.usecase.SomeFunction()` untuk mengambil data
-
-	// Response dummy untuk contoh
-
-	response.Success(c, 200, "Hello world", nil)
+func (h *PenggunaHandler) GetAllPengguna(c *gin.Context) {
+	
+	allPengguna, err := h.Usecase.PenggunaUsecase.GetAllPengguna()
+	if err != nil {
+		response.Error(c, 404, "Failed to get all Pengguna", err)
+	}
+	response.Success(c, 200, "Hello world", allPengguna)
+	
 }

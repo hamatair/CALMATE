@@ -42,7 +42,8 @@ func (r *Rest) MountEndpoint() {
 	routerGroup := r.router.Group("/api/v1")
 
 	// Menggunakan handler dari penggunaHandler
-	routerGroup.GET("/tes", r.penggunaHandler.GetPengguna)
+	routerGroup.GET("/cek", r.penggunaHandler.GetAllPengguna)
+	routerGroup.POST("/register", r.penggunaHandler.PengunaRegister)
 }
 
 func (r *Rest) Serve() {
