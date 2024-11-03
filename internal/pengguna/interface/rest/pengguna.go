@@ -42,10 +42,28 @@ func (h *PenggunaHandler) PengunaRegister(c *gin.Context) {
 // GetPengguna method handler untuk endpoint /tes
 func (h *PenggunaHandler) GetAllPengguna(c *gin.Context) {
 	
-	allPengguna, err := h.Usecase.PenggunaUsecase.GetAllPengguna()
+	profilPengguna, err := h.Usecase.PenggunaUsecase.GetAllPengguna()
 	if err != nil {
 		response.Error(c, 404, "Failed to get all Pengguna", err)
 	}
-	response.Success(c, 200, "Hello world", allPengguna)
+	response.Success(c, 200, "Hello world", profilPengguna)
 	
+}
+
+func (h *PenggunaHandler) Login(c *gin.Context) {
+	param := model.PenggunaParam{}
+
+	err := c.ShouldBindJSON(&param)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "failed to bind input", err)
+		return
+	}
+
+	token, err := h.Usecase.PenggunaUsecase.LoginPengguna(param)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, "failed to login", err)
+		return
+	}
+
+	response.Success(c, http.StatusOK, "success login to system", token)
 }

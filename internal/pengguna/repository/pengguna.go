@@ -1,13 +1,17 @@
 package repository
 
 import (
+	"errors"
+
 	entity "github.com/bccfilkom-be/go-server/internal/domain"
+	"github.com/bccfilkom-be/go-server/pkg/model"
 	"gorm.io/gorm"
 )
 
 type IPenggunaRepository interface {
 	// CreateUser(user entity.User) (entity.User, error)
 	// GetUser(param model.UserParam) (entity.User, error)
+	GetPengguna(model.PenggunaParam) (entity.Pengguna, error)
 	CreatePengguna(entity.Pengguna) error
 	GetAllPengguna() ([]entity.Pengguna, error)
 }
@@ -15,6 +19,16 @@ type IPenggunaRepository interface {
 type PenggunaRepository struct {
 	db *gorm.DB
 }
+
+// GetPengguna implements IPenggunaRepository.
+func (r *PenggunaRepository) GetPengguna(param model.PenggunaParam) (entity.Pengguna, error) {
+	var Pengguna entity.Pengguna
+	err := r.db.Debug().Where(&param).Find(&Pengguna).Error
+	if err != nil {
+		return entity.Pengguna{}, err
+	}
+
+	return Pengguna, nil}
 
 // GetAllPengguna implements IPenggunaRepository.
 func (r *PenggunaRepository) GetAllPengguna() ([]entity.Pengguna, error) {
@@ -30,7 +44,13 @@ func (r *PenggunaRepository) GetAllPengguna() ([]entity.Pengguna, error) {
 
 // CreatePengguna implements IPenggunaRepository.
 func (r *PenggunaRepository) CreatePengguna(param entity.Pengguna) error {
-	err := r.db.Debug().Create(&param).Error
+	var existingUser entity.Pengguna
+	err := r.db.Where("email = ?", param.Email).First(&existingUser).Error
+	if err == nil {
+		return errors.New("email Sudah Ada")
+	}
+	
+	err = r.db.Debug().Create(&param).Error
 	if err != nil {
 		return err
 	}
