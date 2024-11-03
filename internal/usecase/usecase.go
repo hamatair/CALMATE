@@ -16,7 +16,7 @@ import (
 
 type Usecase struct {
 	PenggunaUsecase                 pengguna.IPenggunaUsecase
-	profilPenggunaUsecase           profilPengguna.IProfilPenggunaUsecase
+	ProfilPenggunaUsecase           profilPengguna.IProfilPenggunaUsecase
 	RiwayatKesehatanUsecase         riwayatKesehatan.IRiwayatKesehatanUsecase
 	RekomendasiNutrisiHarianUsecase rekomendasiNutrisiHarian.IRekomendasiNutrisiHarianUsecase
 	ProgresNutrisiHarianUsecase     progresNutrisiHarian.IProgresNutrisiHarianUsecase
@@ -34,14 +34,13 @@ type InitParam struct {
 
 func NewUsecase(param InitParam) *Usecase {
 	penggunaUsecase := pengguna.NewpenggunaUsecase(*param.Repository, param.Bcrypt, param.JwtAuth)
-	profilPenggunaUsecase := profilPengguna.NewProfilPenggunaUsecase(param.Repository.ProfilPenggunaRepository)
-	// userService := NewUserService(param.Repository.UserRepository, param.Bcrypt, param.JwtAuth)
-	// bookService := NewBookService(param.Repository.BookRepository)
-
+	profilPenggunaUsecase := profilPengguna.NewProfilPenggunaUsecase(*param.Repository)
+	riwayatKesehatan := riwayatKesehatan.NewriwayatKesehatanUsecase(*param.Repository)
+	
 	return &Usecase{
 		PenggunaUsecase: penggunaUsecase,
-		profilPenggunaUsecase: profilPenggunaUsecase,
-		// UserService: userService,
-		// BookService: bookService,
+		ProfilPenggunaUsecase: profilPenggunaUsecase,
+		RiwayatKesehatanUsecase: riwayatKesehatan,
+		
 	}
 }

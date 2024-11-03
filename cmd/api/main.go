@@ -3,13 +3,14 @@ package main
 import (
 	// "net/http"
 
-	"github.com/bccfilkom-be/go-server/internal/usecase"
-	"github.com/bccfilkom-be/go-server/internal/rest"
 	"github.com/bccfilkom-be/go-server/internal/repository"
+	"github.com/bccfilkom-be/go-server/internal/rest"
+	"github.com/bccfilkom-be/go-server/internal/usecase"
 	"github.com/bccfilkom-be/go-server/pkg/bcrypt"
 	"github.com/bccfilkom-be/go-server/pkg/config"
 	"github.com/bccfilkom-be/go-server/pkg/database/mysql"
 	"github.com/bccfilkom-be/go-server/pkg/jwt"
+	"github.com/bccfilkom-be/go-server/pkg/middleware"
 	// "github.com/go-chi/chi/v5"
 	// "github.com/go-chi/chi/v5/middleware"
 	// "gorm.io/gorm"
@@ -77,7 +78,10 @@ func main() {
 		Bcrypt: bcrypt,
 	})
 
-	rest := rest.NewRest(usecase)
+	middleware := middleware.Init(jwtAuth, usecase)
+
+
+	rest := rest.NewRest(usecase, middleware)
 
 	mysql.Migration(db)
 

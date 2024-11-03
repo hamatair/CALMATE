@@ -32,7 +32,13 @@ func (m *middleware) AuthenticateUser(ctx *gin.Context) {
 		ctx.Abort()
 	}
 
-	ctx.Set("pengguna", pengguna)
+	param := model.PenggunaParam{
+		IDPengguna: pengguna.IDPengguna,
+		Email: pengguna.Email,
+		Password: pengguna.Password,
+	}
+
+	ctx.Set("pengguna", param)
 
 	ctx.Next()
 }
