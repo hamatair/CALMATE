@@ -13,28 +13,36 @@ import (
 	rekomendasiNutrisiHarian "github.com/bccfilkom-be/go-server/internal/rekomendasi_nutrisi_harian/interface/rest"
 	riwayatKesehatan "github.com/bccfilkom-be/go-server/internal/riwayat_kesehatan/interface/rest"
 	"github.com/bccfilkom-be/go-server/internal/usecase"
+	"github.com/bccfilkom-be/go-server/pkg/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 type Rest struct {
-	router         *gin.Engine
-	Usecase        *usecase.Usecase
-	penggunaHandler *pengguna.PenggunaHandler
-	profilPengguna *profilPengguna.ProfilPenggunaHandler
-	riwayatKesehatan *riwayatKesehatan.RiwayatKesehatanHandler
+	router                   *gin.Engine
+	Usecase                  *usecase.Usecase
+	penggunaHandler          *pengguna.PenggunaHandler
+	profilPengguna           *profilPengguna.ProfilPenggunaHandler
+	riwayatKesehatan         *riwayatKesehatan.RiwayatKesehatanHandler
 	rekomendasiNutrisiHarian *rekomendasiNutrisiHarian.RekomendasiNutrisiHarianHandler
-	progresNutrisiHarian *progresNutrisiHarian.ProgresNutrisiHarianHandler
-	artikel *artikel.ArtikelHandler
-	administrator *administrator.AdministratorHandler
-
+	progresNutrisiHarian     *progresNutrisiHarian.ProgresNutrisiHarianHandler
+	artikel                  *artikel.ArtikelHandler
+	administrator            *administrator.AdministratorHandler
+	middleware               middleware.Interface
 }
 
 // NewRest constructor untuk Rest, menginisialisasi penggunaHandler juga
-func NewRest(usecase *usecase.Usecase) *Rest {
+func NewRest(usecase *usecase.Usecase, middleware middleware.Interface) *Rest {
 	return &Rest{
-		router:         gin.Default(),
-		Usecase:        usecase,
-		penggunaHandler: pengguna.NewPenggunaHandler(usecase),
+		router:                   gin.Default(),
+		Usecase:                  usecase,
+		penggunaHandler:          pengguna.NewPenggunaHandler(usecase),
+		profilPengguna:           profilPengguna.NewprofilPenggunaHandler(usecase),
+		riwayatKesehatan:         riwayatKesehatan.NewriwayatKesehatanHandler(usecase),
+		rekomendasiNutrisiHarian: rekomendasiNutrisiHarian.NewrekomendasiNutrisiHarianHandler(usecase),
+		progresNutrisiHarian:     progresNutrisiHarian.NewprogresNutrisiHarianHandler(usecase),
+		artikel:                  artikel.NewartikelHandler(usecase),
+		administrator:            administrator.NewadministratorHandler(usecase),
+		middleware:               middleware,
 	}
 }
 
@@ -44,6 +52,11 @@ func (r *Rest) MountEndpoint() {
 	// Menggunakan handler dari penggunaHandler
 	routerGroup.GET("/cek", r.penggunaHandler.GetAllPengguna)
 	routerGroup.POST("/register", r.penggunaHandler.PengunaRegister)
+	routerGroup.POST("/login", r.penggunaHandler.Login)
+	routerGroup.GET("/get-profil", r.middleware.AuthenticateUser, r.profilPengguna.GetProfilPengguna)
+	routerGroup.PATCH("/update-profil", r.middleware.AuthenticateUser, r.profilPengguna.UpdateProfilPengguna)
+	routerGroup.DELETE("/delete-foto-profil", r.middleware.AuthenticateUser, r.profilPengguna.DeleteFotoProfilPengguna)
+	routerGroup.GET("/get-riwayat-kesehatan", r.middleware.AuthenticateUser, r.riwayatKesehatan.GetRiwayatKesehatan)
 }
 
 func (r *Rest) Serve() {
