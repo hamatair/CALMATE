@@ -57,6 +57,8 @@ func (r *Rest) MountEndpoint() {
 	routerGroup.PATCH("/update-profil", r.middleware.AuthenticateUser, r.profilPengguna.UpdateProfilPengguna)
 	routerGroup.DELETE("/delete-foto-profil", r.middleware.AuthenticateUser, r.profilPengguna.DeleteFotoProfilPengguna)
 	routerGroup.GET("/get-riwayat-kesehatan", r.middleware.AuthenticateUser, r.riwayatKesehatan.GetRiwayatKesehatan)
+	routerGroup.PATCH("/update-riwayat-kesehatan", r.middleware.AuthenticateUser, r.riwayatKesehatan.UpdateRiwayatKesehatan)
+	routerGroup.DELETE("delete-riwayat-kesehatan", r.middleware.AuthenticateUser, r.riwayatKesehatan.DeleteRiwayatKesehatan)
 }
 
 func (r *Rest) Serve() {

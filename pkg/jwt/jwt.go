@@ -18,16 +18,6 @@ type Interface interface {
 	ValidateToken(tokenString string) (uuid.UUID, error)
 }
 
-// CompareAndHashPassword implements bcrypt.Interface.
-// func (Interface) CompareAndHashPassword(hashedPassword string, password string) error {
-// 	panic("unimplemented")
-// }
-
-// // GenerateFromPassword implements bcrypt.Interface.
-// func (Interface) GenerateFromPassword(password string) (string, error) {
-// 	panic("unimplemented")
-// }
-
 type jsonWebToken struct {
 	SecretKey   string
 	ExpiredTime time.Duration

@@ -37,6 +37,14 @@ type ProfilPengguna struct {
 	Foto              string
 }
 
-type RiwayatKesehatan struct{
-	
+type UpdateRiwayatKesehatan struct {
+	Jenis string
+	Detail string
+	Tanggal time.Time
 }
+
+type DeleteRiwayatKesehatan struct {
+	Jenis string
+	Index int
+}
+
