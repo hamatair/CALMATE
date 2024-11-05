@@ -14,6 +14,7 @@ import (
 	riwayatKesehatan "github.com/bccfilkom-be/go-server/internal/riwayat_kesehatan/interface/rest"
 	"github.com/bccfilkom-be/go-server/internal/usecase"
 	"github.com/bccfilkom-be/go-server/pkg/middleware"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -47,6 +48,15 @@ func NewRest(usecase *usecase.Usecase, middleware middleware.Interface) *Rest {
 }
 
 func (r *Rest) MountEndpoint() {
+	r.router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"*"},
+		AllowCredentials: true,
+	}))
+	r.router.Use(r.middleware.Timeout())
+
 	routerGroup := r.router.Group("/api/v1")
 
 	// Menggunakan handler dari penggunaHandler
