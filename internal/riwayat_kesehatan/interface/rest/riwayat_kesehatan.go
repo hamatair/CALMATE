@@ -64,10 +64,11 @@ func (h *RiwayatKesehatanHandler) UpdateRiwayatKesehatan(c *gin.Context){
 
 	err = h.Usecase.RiwayatKesehatanUsecase.UpdateRiwayatKesehatan(param, newRiwayatKesehatan)
 	if err != nil {
-		response.Error(c, http.StatusInternalServerError, "Failed to Update Profil Pengguna", err)
+		response.Error(c, http.StatusInternalServerError, "Failed to Update Riwayat Kesehatan Pengguna", err)
+		return
 	}
 
-	response.Success(c, http.StatusOK, "SUccess to Update Profil Pengguna", nil)
+	response.Success(c, http.StatusOK, "SUccess to Update Riwayat Kesehatan Pengguna", nil)
 }
 
 func (h *RiwayatKesehatanHandler) DeleteRiwayatKesehatan (c *gin.Context) {
@@ -87,13 +88,15 @@ func (h *RiwayatKesehatanHandler) DeleteRiwayatKesehatan (c *gin.Context) {
 	param, ok := pengguna.(model.PenggunaParam)
 	if !ok {
 		response.Error(c, http.StatusInternalServerError, "Failed to Casting", errors.New(""))
+		return
 	}
 
 	err = h.Usecase.RiwayatKesehatanUsecase.DeleteRiwayatKesehatan(param, del)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, "Failed to Delete Riwayat Kesehatan", err)
+		return
 	}
 
-	response.Success(c, http.StatusOK, "Success to delete foto profil Pengguna", err)
+	response.Success(c, http.StatusOK, "Success to delete Riwayat Kesehatan Pengguna", err)
 
 }

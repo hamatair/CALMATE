@@ -36,11 +36,12 @@ func NewUsecase(param InitParam) *Usecase {
 	penggunaUsecase := pengguna.NewpenggunaUsecase(*param.Repository, param.Bcrypt, param.JwtAuth)
 	profilPenggunaUsecase := profilPengguna.NewProfilPenggunaUsecase(*param.Repository)
 	riwayatKesehatan := riwayatKesehatan.NewriwayatKesehatanUsecase(*param.Repository)
+	rekomendasiNutrisiHarian := rekomendasiNutrisiHarian.NewrekomendasiNutrisiHarianUsecase(*param.Repository)
 	
 	return &Usecase{
 		PenggunaUsecase: penggunaUsecase,
 		ProfilPenggunaUsecase: profilPenggunaUsecase,
 		RiwayatKesehatanUsecase: riwayatKesehatan,
-		
+		RekomendasiNutrisiHarianUsecase: rekomendasiNutrisiHarian,
 	}
 }

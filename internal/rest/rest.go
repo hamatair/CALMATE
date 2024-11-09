@@ -69,6 +69,7 @@ func (r *Rest) MountEndpoint() {
 	routerGroup.GET("/get-riwayat-kesehatan", r.middleware.AuthenticateUser, r.riwayatKesehatan.GetRiwayatKesehatan)
 	routerGroup.PATCH("/update-riwayat-kesehatan", r.middleware.AuthenticateUser, r.riwayatKesehatan.UpdateRiwayatKesehatan)
 	routerGroup.DELETE("delete-riwayat-kesehatan", r.middleware.AuthenticateUser, r.riwayatKesehatan.DeleteRiwayatKesehatan)
+	routerGroup.PATCH("get-rekomendasi", r.middleware.AuthenticateUser, r.rekomendasiNutrisiHarian.GetRekomendasi)
 }
 
 func (r *Rest) Serve() {
