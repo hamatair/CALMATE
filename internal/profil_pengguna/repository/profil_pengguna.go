@@ -7,8 +7,6 @@ import (
 )
 
 type IProfilPenggunaRepository interface {
-	// CreateUser(user entity.User) (entity.User, error)
-	// GetUser(param model.UserParam) (entity.User, error)
 	CreateProfilPengguna(entity.ProfilPengguna) error
 	GetProfilPengguna(model.PenggunaParam) (entity.ProfilPengguna, error)
 	UpdateProfilPengguna(model.PenggunaParam, model.ProfilPengguna) error

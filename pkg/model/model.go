@@ -38,8 +38,8 @@ type ProfilPengguna struct {
 }
 
 type UpdateRiwayatKesehatan struct {
-	Jenis string
-	Detail string
+	Jenis   string
+	Detail  string
 	Tanggal time.Time
 }
 
@@ -48,3 +48,23 @@ type DeleteRiwayatKesehatan struct {
 	Index int
 }
 
+type Makanan struct {
+	Nama        string
+	Jenis       string
+	Kalori      float32
+	Karbohidrat float32
+	Protein     float32
+	Lemak       float32
+	Gambar      string
+}
+
+type GetMakanan struct {
+	Jenis string
+}
+
+type ProgresNutrisiHarian struct {
+	JumlahKonsumsiKalori      float32
+	JumlahKonsumsiKarbohidrat float32
+	JumlahKonsumsiProtein     float32
+	JumlahKonsumsiLemak       float32
+}

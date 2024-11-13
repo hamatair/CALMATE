@@ -3,6 +3,7 @@ package usecase
 import (
 	administrator "github.com/bccfilkom-be/go-server/internal/administrator/usecase"
 	artikel "github.com/bccfilkom-be/go-server/internal/artikel/usecase"
+	makanan "github.com/bccfilkom-be/go-server/internal/makanan/usecase"
 	pengguna "github.com/bccfilkom-be/go-server/internal/pengguna/usecase"
 	profilPengguna "github.com/bccfilkom-be/go-server/internal/profil_pengguna/usecase"
 	progresNutrisiHarian "github.com/bccfilkom-be/go-server/internal/progres_nutrisi_harian/usecase"
@@ -22,8 +23,7 @@ type Usecase struct {
 	ProgresNutrisiHarianUsecase     progresNutrisiHarian.IProgresNutrisiHarianUsecase
 	ArtikelUsecase                  artikel.IArtikelUsecase
 	Administrator                   administrator.IAdministratorUsecase
-	// UserService IUserService
-	// BookService IBookService
+	Makanan                         makanan.IMakananUsecase
 }
 
 type InitParam struct {
@@ -37,11 +37,15 @@ func NewUsecase(param InitParam) *Usecase {
 	profilPenggunaUsecase := profilPengguna.NewProfilPenggunaUsecase(*param.Repository)
 	riwayatKesehatan := riwayatKesehatan.NewriwayatKesehatanUsecase(*param.Repository)
 	rekomendasiNutrisiHarian := rekomendasiNutrisiHarian.NewrekomendasiNutrisiHarianUsecase(*param.Repository)
-	
+	makanan := makanan.NewmakananUsecase(*param.Repository)
+	progresNutrisiHarian := progresNutrisiHarian.NewprogresNutrisiHarianUsecase(*param.Repository)
+
 	return &Usecase{
-		PenggunaUsecase: penggunaUsecase,
-		ProfilPenggunaUsecase: profilPenggunaUsecase,
-		RiwayatKesehatanUsecase: riwayatKesehatan,
+		PenggunaUsecase:                 penggunaUsecase,
+		ProfilPenggunaUsecase:           profilPenggunaUsecase,
+		RiwayatKesehatanUsecase:         riwayatKesehatan,
 		RekomendasiNutrisiHarianUsecase: rekomendasiNutrisiHarian,
+		Makanan:                         makanan,
+		ProgresNutrisiHarianUsecase:     progresNutrisiHarian,
 	}
 }

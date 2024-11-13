@@ -1,15 +1,65 @@
 package usecase
 
-import "github.com/bccfilkom-be/go-server/internal/progres_nutrisi_harian/repository"
+import (
+	entity "github.com/bccfilkom-be/go-server/internal/domain"
+	"github.com/bccfilkom-be/go-server/internal/repository"
+	"github.com/bccfilkom-be/go-server/pkg/model"
+)
 
-type IProgresNutrisiHarianUsecase interface {}
-
-type progresNutrisiHarianUsecase struct {
-    ProgresNutrisiHarianRepository repository.IProgresNutrisiHarianRepository
+type IProgresNutrisiHarianUsecase interface {
+	GetProges(model.PenggunaParam) (entity.ProgresNutrisiHarian, error)
+	UpdateProgres(model.PenggunaParam, model.ProgresNutrisiHarian) error
+	// ResetProgres() error
 }
 
-func NewprogresNutrisiHarianUsecase(progresNutrisiHarianRepository repository.IProgresNutrisiHarianRepository) IProgresNutrisiHarianUsecase {
-    return &progresNutrisiHarianUsecase{
-        ProgresNutrisiHarianRepository: progresNutrisiHarianRepository,
-    }
+type progresNutrisiHarianUsecase struct {
+	Repository repository.Repository
+}
+
+// ResetProgres implements IProgresNutrisiHarianUsecase.
+// func (u *progresNutrisiHarianUsecase) ResetProgres() error {
+// 	AllProgres, err := u.Repository.ProgresNutrisiHarian.GetAllProgres()
+// 	if err != nil {
+// 		return err
+// 	}
+
+
+// }
+
+// GetProges implements IProgresNutrisiHarianUsecase.
+func (u *progresNutrisiHarianUsecase) GetProges(param model.PenggunaParam) (entity.ProgresNutrisiHarian, error) {
+	progres, err := u.Repository.ProgresNutrisiHarian.GetProgres(param)
+	if err != nil {
+		return entity.ProgresNutrisiHarian{}, err
+	}
+
+	return progres, err
+}
+
+// UpdateProgres implements IProgresNutrisiHarianUsecase.
+func (u *progresNutrisiHarianUsecase) UpdateProgres(param model.PenggunaParam, progres model.ProgresNutrisiHarian) error {
+	oldProgres, err := u.Repository.ProgresNutrisiHarian.GetProgres(param)
+	if err != nil {
+		return err
+	}
+
+	newProgres := model.ProgresNutrisiHarian{
+		JumlahKonsumsiKalori:      oldProgres.JumlahKonsumsiKalori + progres.JumlahKonsumsiKalori,
+		JumlahKonsumsiKarbohidrat: oldProgres.JumlahKonsumsiKarbohidrat + progres.JumlahKonsumsiKarbohidrat,
+		JumlahKonsumsiProtein:     oldProgres.JumlahKonsumsiProtein + progres.JumlahKonsumsiProtein,
+		JumlahKonsumsiLemak:       oldProgres.JumlahKonsumsiLemak + progres.JumlahKonsumsiLemak,
+	}
+
+	err = u.Repository.ProgresNutrisiHarian.UpdateProgres(param, newProgres)
+	if err != nil {
+		return err
+	}
+
+	return err
+}
+
+func NewprogresNutrisiHarianUsecase(repository repository.Repository) IProgresNutrisiHarianUsecase {
+	return &progresNutrisiHarianUsecase{
+		Repository: repository,
+	}
 }

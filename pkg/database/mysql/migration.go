@@ -17,6 +17,7 @@ func Migration(db *gorm.DB) {
 		&entity.ProgresNutrisiHarian{},
 		&entity.Artikel{},
 		&entity.Administrator{},
+		&entity.Makanan{},
 	)
 
 	// Migrasi tabel pengguna terlebih dahulu
@@ -32,6 +33,7 @@ func Migration(db *gorm.DB) {
 		&entity.ProgresNutrisiHarian{},
 		&entity.Artikel{},
 		&entity.Administrator{},
+		&entity.Makanan{},
 	); err != nil {
 		log.Fatalf("failed migration db: %v", err)
 	}

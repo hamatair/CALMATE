@@ -120,6 +120,20 @@ func (u *penggunaUsecase) RegisterPengguna(param model.PengunaRegister) error {
 		return err
 	}
 
+	progres := entity.ProgresNutrisiHarian{
+		IDProgresNutrisiHarian: uuid.New().String(),
+		IDPengguna: pengguna.IDPengguna,
+		JumlahKonsumsiKalori: 0,
+		JumlahKonsumsiKarbohidrat: 0,
+		JumlahKonsumsiProtein: 0,
+		JumlahKonsumsiLemak: 0,
+	}
+
+	err = u.Repository.ProgresNutrisiHarian.CreateProgres(progres)
+	if err != nil {
+		return err
+	}
+
 	return err
 }
 

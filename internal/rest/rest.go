@@ -7,15 +7,18 @@ import (
 
 	administrator "github.com/bccfilkom-be/go-server/internal/administrator/interface/rest"
 	artikel "github.com/bccfilkom-be/go-server/internal/artikel/interface/rest"
+	makanan "github.com/bccfilkom-be/go-server/internal/makanan/interface/rest"
 	pengguna "github.com/bccfilkom-be/go-server/internal/pengguna/interface/rest"
 	profilPengguna "github.com/bccfilkom-be/go-server/internal/profil_pengguna/interface/rest"
 	progresNutrisiHarian "github.com/bccfilkom-be/go-server/internal/progres_nutrisi_harian/interface/rest"
 	rekomendasiNutrisiHarian "github.com/bccfilkom-be/go-server/internal/rekomendasi_nutrisi_harian/interface/rest"
 	riwayatKesehatan "github.com/bccfilkom-be/go-server/internal/riwayat_kesehatan/interface/rest"
+
 	"github.com/bccfilkom-be/go-server/internal/usecase"
 	"github.com/bccfilkom-be/go-server/pkg/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	// "github.com/robfig/cron/v3"
 )
 
 type Rest struct {
@@ -28,6 +31,7 @@ type Rest struct {
 	progresNutrisiHarian     *progresNutrisiHarian.ProgresNutrisiHarianHandler
 	artikel                  *artikel.ArtikelHandler
 	administrator            *administrator.AdministratorHandler
+	makanan                  *makanan.MakananHandler
 	middleware               middleware.Interface
 }
 
@@ -43,6 +47,7 @@ func NewRest(usecase *usecase.Usecase, middleware middleware.Interface) *Rest {
 		progresNutrisiHarian:     progresNutrisiHarian.NewprogresNutrisiHarianHandler(usecase),
 		artikel:                  artikel.NewartikelHandler(usecase),
 		administrator:            administrator.NewadministratorHandler(usecase),
+		makanan:                  makanan.NewmakananHandler(usecase),
 		middleware:               middleware,
 	}
 }
@@ -70,6 +75,16 @@ func (r *Rest) MountEndpoint() {
 	routerGroup.PATCH("/update-riwayat-kesehatan", r.middleware.AuthenticateUser, r.riwayatKesehatan.UpdateRiwayatKesehatan)
 	routerGroup.DELETE("delete-riwayat-kesehatan", r.middleware.AuthenticateUser, r.riwayatKesehatan.DeleteRiwayatKesehatan)
 	routerGroup.PATCH("get-rekomendasi", r.middleware.AuthenticateUser, r.rekomendasiNutrisiHarian.GetRekomendasi)
+	routerGroup.POST("create-makanan", r.makanan.CreateMakanan)
+	routerGroup.GET("get-makanan", r.makanan.GetMakanan)
+	routerGroup.GET("get-progres", r.middleware.AuthenticateUser, r.progresNutrisiHarian.GetProgres)
+	routerGroup.PATCH("update-progres", r.middleware.AuthenticateUser, r.progresNutrisiHarian.UpdateProgres)
+
+
+	// check := cron.New()
+	// check.AddFunc("0 0 * * *", func() {
+	// 	r.progresNutrisiHarian.ResetProgres()
+	// })
 }
 
 func (r *Rest) Serve() {

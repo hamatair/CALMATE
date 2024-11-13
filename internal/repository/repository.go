@@ -3,6 +3,7 @@ package repository
 import (
 	administrator "github.com/bccfilkom-be/go-server/internal/administrator/repository"
 	artikel "github.com/bccfilkom-be/go-server/internal/artikel/repository"
+	makanan "github.com/bccfilkom-be/go-server/internal/makanan/repository"
 	pengguna "github.com/bccfilkom-be/go-server/internal/pengguna/repository"
 	profilPengguna "github.com/bccfilkom-be/go-server/internal/profil_pengguna/repository"
 	progresNutrisiHarian "github.com/bccfilkom-be/go-server/internal/progres_nutrisi_harian/repository"
@@ -20,6 +21,7 @@ type Repository struct {
 	ProgresNutrisiHarian               progresNutrisiHarian.IProgresNutrisiHarianRepository
 	Artikel                            artikel.IArtikelRepository
 	Administrator                      administrator.IAdministratorRepository
+	Makanan                            makanan.IMakananRepository
 }
 
 func NewRepository(db *gorm.DB) *Repository {
@@ -31,5 +33,6 @@ func NewRepository(db *gorm.DB) *Repository {
 		ProgresNutrisiHarian:               progresNutrisiHarian.NewProgresNutrisiHarianRepository(db),
 		Artikel:                            artikel.NewArtikelRepository(db),
 		Administrator:                      administrator.NewAdministratorRepository(db),
+		Makanan:                            makanan.NewMakananRepository(db),
 	}
 }
