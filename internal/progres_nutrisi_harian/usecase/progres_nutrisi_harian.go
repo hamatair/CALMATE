@@ -9,7 +9,7 @@ import (
 type IProgresNutrisiHarianUsecase interface {
 	GetProges(model.PenggunaParam) (entity.ProgresNutrisiHarian, error)
 	UpdateProgres(model.PenggunaParam, model.ProgresNutrisiHarian) error
-	// ResetProgres() error
+	ResetAllProgres() error
 }
 
 type progresNutrisiHarianUsecase struct {
@@ -17,14 +17,27 @@ type progresNutrisiHarianUsecase struct {
 }
 
 // ResetProgres implements IProgresNutrisiHarianUsecase.
-// func (u *progresNutrisiHarianUsecase) ResetProgres() error {
-// 	AllProgres, err := u.Repository.ProgresNutrisiHarian.GetAllProgres()
-// 	if err != nil {
-// 		return err
-// 	}
+func (u *progresNutrisiHarianUsecase) ResetAllProgres() error {
+	AllProgres, err := u.Repository.ProgresNutrisiHarian.GetAllProgres()
+	if err != nil {
+		return err
+	}
 
+	for i:= range AllProgres{
+		AllProgres[i].JumlahKonsumsiKalori = 0
+		AllProgres[i].JumlahKonsumsiKarbohidrat = 0
+		AllProgres[i].JumlahKonsumsiProtein = 0
+		AllProgres[i].JumlahKonsumsiLemak = 0
+	}
 
-// }
+	err = u.Repository.ProgresNutrisiHarian.ResetAllProgres(AllProgres)
+	if err != nil {
+		return err
+	}
+
+	return err
+
+}
 
 // GetProges implements IProgresNutrisiHarianUsecase.
 func (u *progresNutrisiHarianUsecase) GetProges(param model.PenggunaParam) (entity.ProgresNutrisiHarian, error) {

@@ -18,7 +18,7 @@ import (
 	"github.com/bccfilkom-be/go-server/pkg/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	// "github.com/robfig/cron/v3"
+	"github.com/robfig/cron/v3"
 )
 
 type Rest struct {
@@ -81,10 +81,12 @@ func (r *Rest) MountEndpoint() {
 	routerGroup.PATCH("update-progres", r.middleware.AuthenticateUser, r.progresNutrisiHarian.UpdateProgres)
 
 
-	// check := cron.New()
-	// check.AddFunc("0 0 * * *", func() {
-	// 	r.progresNutrisiHarian.ResetProgres()
-	// })
+	check := cron.New()
+	check.AddFunc("0 0 * * *", func() {
+		r.progresNutrisiHarian.ResetProgres()
+	})
+
+	check.Start()
 }
 
 func (r *Rest) Serve() {

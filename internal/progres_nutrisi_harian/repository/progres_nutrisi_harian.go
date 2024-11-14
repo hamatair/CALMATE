@@ -11,10 +11,21 @@ type IProgresNutrisiHarianRepository interface {
 	UpdateProgres(model.PenggunaParam, model.ProgresNutrisiHarian) error
 	GetProgres(model.PenggunaParam) (entity.ProgresNutrisiHarian, error)
 	GetAllProgres() ([]entity.ProgresNutrisiHarian, error)
+	ResetAllProgres([]entity.ProgresNutrisiHarian) error
 }
 
 type ProgresNutrisiHarianRepository struct {
 	db *gorm.DB
+}
+
+// ResetAllProgres implements IProgresNutrisiHarianRepository.
+func (r *ProgresNutrisiHarianRepository) ResetAllProgres(allProgres []entity.ProgresNutrisiHarian) error {
+	err := r.db.Debug().Save(allProgres).Error
+	if err != nil {
+		return err
+	}
+
+	return err
 }
 
 // GetAllProgres implements IProgresNutrisiHarianRepository.

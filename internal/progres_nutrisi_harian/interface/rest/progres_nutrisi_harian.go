@@ -2,6 +2,7 @@ package rest
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/bccfilkom-be/go-server/internal/usecase"
@@ -70,6 +71,9 @@ func (h *ProgresNutrisiHarianHandler) GetProgres(c *gin.Context){
     response.Success(c, http.StatusOK, "Success to Get Progres", progres)
 }
 
-// func (h *ProgresNutrisiHarianHandler) ResetProgres(c *gin.Context){
-//     err := h.Usecase.ProgresNutrisiHarianUsecase.ResetProgres
-// }
+func (h *ProgresNutrisiHarianHandler) ResetProgres(){
+    err := h.Usecase.ProgresNutrisiHarianUsecase.ResetAllProgres()
+    if err != nil {
+        log.Fatal(err)
+    }
+}
