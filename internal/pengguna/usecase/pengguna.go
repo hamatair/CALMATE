@@ -3,6 +3,7 @@ package usecase
 import (
 	"errors"
 	"math"
+	"time"
 
 	entity "github.com/bccfilkom-be/go-server/internal/domain"
 	"github.com/bccfilkom-be/go-server/internal/repository"
@@ -96,6 +97,7 @@ func (u *penggunaUsecase) RegisterPengguna(param model.PengunaRegister) error {
 		IDProfil:          uuid.New().String(),
 		IDPengguna:        pengguna.IDPengguna,
 		NamaPengguna:      param.NamaPengguna,
+		TanggalLahir: time.Now(),
 		JenisKelamin:      param.JenisKelamin,
 		TinggiBadan:       param.TinggiBadan,
 		BeratBadan:        param.BeratBadan,
