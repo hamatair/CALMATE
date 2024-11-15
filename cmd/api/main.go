@@ -7,6 +7,7 @@ import (
 	"github.com/bccfilkom-be/go-server/pkg/bcrypt"
 	"github.com/bccfilkom-be/go-server/pkg/config"
 	"github.com/bccfilkom-be/go-server/pkg/database/mysql"
+	"github.com/bccfilkom-be/go-server/pkg/database/supabase"
 	"github.com/bccfilkom-be/go-server/pkg/jwt"
 	"github.com/bccfilkom-be/go-server/pkg/middleware"
 )
@@ -19,6 +20,8 @@ func main() {
 
 	bcrypt := bcrypt.Init()
 
+	supabase := supabase.Init()
+
 	db := mysql.ConnectDatabase()
 
 	repository := repository.NewRepository(db)
@@ -27,6 +30,7 @@ func main() {
 		Repository: repository,
 		JwtAuth: jwtAuth,
 		Bcrypt: bcrypt,
+		Supabase: supabase,
 	})
 
 	middleware := middleware.Init(jwtAuth, usecase)

@@ -9,8 +9,6 @@ import (
 )
 
 type IPenggunaRepository interface {
-	// CreateUser(user entity.User) (entity.User, error)
-	// GetUser(param model.UserParam) (entity.User, error)
 	GetPengguna(model.PenggunaParam) (entity.Pengguna, error)
 	CreatePengguna(entity.Pengguna) error
 	GetAllPengguna() ([]entity.Pengguna, error)

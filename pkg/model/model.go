@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"mime/multipart"
+	"time"
+)
 
 type PenggunaParam struct {
 	IDPengguna string
@@ -67,4 +70,8 @@ type ProgresNutrisiHarian struct {
 	JumlahKonsumsiKarbohidrat float32
 	JumlahKonsumsiProtein     float32
 	JumlahKonsumsiLemak       float32
+}
+
+type Foto struct{
+	Photo *multipart.FileHeader
 }

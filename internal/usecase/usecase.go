@@ -12,6 +12,7 @@ import (
 
 	"github.com/bccfilkom-be/go-server/internal/repository"
 	"github.com/bccfilkom-be/go-server/pkg/bcrypt"
+	"github.com/bccfilkom-be/go-server/pkg/database/supabase"
 	"github.com/bccfilkom-be/go-server/pkg/jwt"
 )
 
@@ -30,6 +31,7 @@ type InitParam struct {
 	Repository *repository.Repository
 	Bcrypt     bcrypt.Interface
 	JwtAuth    jwt.Interface
+	Supabase   supabase.Interface
 }
 
 func NewUsecase(param InitParam) *Usecase {
