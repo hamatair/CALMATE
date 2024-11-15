@@ -32,8 +32,11 @@ RUN go mod download
 # Copy local code to the container image.
 COPY . ./
 
+# Copy .env to the app directory in the container
+COPY .env ./
+
 # Build the binary.
-RUN CGO_ENABLED=0 GOOS=linux go build -o server ./
+RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd/api
 
 # Use the official Debian slim image for a lean production container.
 # https://hub.docker.com/_/debian
