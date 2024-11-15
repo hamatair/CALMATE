@@ -33,7 +33,7 @@ RUN go mod download
 COPY . ./
 
 # Copy .env to the app directory in the container
-COPY .env /app/.env
+COPY .env /app/cmd/api/.env
 
 # Build the binary.
 RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd/api
