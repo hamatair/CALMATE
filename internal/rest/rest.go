@@ -94,7 +94,7 @@ func (r *Rest) Serve() {
 	port := os.Getenv("APP_PORT")
 
 	if addr == "" {
-		addr = "127.0.0.1"
+		addr = "0.0.0.0"
 	}
 	if port == "" {
 		port = "8080"
