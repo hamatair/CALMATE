@@ -16,6 +16,7 @@ type PengunaRegister struct {
 	Password string
 
 	NamaPengguna      string
+	TanggalLahir      time.Time
 	JenisKelamin      string
 	TinggiBadan       float32
 	BeratBadan        float32
@@ -72,6 +73,6 @@ type ProgresNutrisiHarian struct {
 	JumlahKonsumsiLemak       float32
 }
 
-type Foto struct{
+type Foto struct {
 	Photo *multipart.FileHeader
 }
