@@ -3,7 +3,6 @@ package usecase
 import (
 	"errors"
 	"math"
-	"time"
 
 	entity "github.com/bccfilkom-be/go-server/internal/domain"
 	"github.com/bccfilkom-be/go-server/internal/repository"
@@ -38,13 +37,13 @@ func (u *penggunaUsecase) LoginPengguna(param model.PenggunaParam) (model.Penggu
 	pengguna, err := u.Repository.PenggunaRepository.GetPengguna(email)
 	if err != nil {
 		return result, err
-	}else if pengguna.IDPengguna == ""{
+	} else if pengguna.IDPengguna == "" {
 		return result, errors.New("email tidak ditemukan")
 	}
 
 	err = u.bcrypt.CompareAndHashPassword(pengguna.Password, param.Password)
 	if err != nil {
-    	return result, err
+		return result, err
 	}
 
 	// Parsing IDPengguna dari string ke uuid.UUID
@@ -53,7 +52,7 @@ func (u *penggunaUsecase) LoginPengguna(param model.PenggunaParam) (model.Penggu
 		return result, err
 	}
 
-// Membuat token JWT menggunakan UUID yang telah diparse
+	// Membuat token JWT menggunakan UUID yang telah diparse
 	token, err := u.jwtAuth.CreateJWTToken(idPengguna)
 	if err != nil {
 		return result, err
@@ -97,7 +96,7 @@ func (u *penggunaUsecase) RegisterPengguna(param model.PengunaRegister) error {
 		IDProfil:          uuid.New().String(),
 		IDPengguna:        pengguna.IDPengguna,
 		NamaPengguna:      param.NamaPengguna,
-		TanggalLahir: time.Now(),
+		TanggalLahir:      param.TanggalLahir,
 		JenisKelamin:      param.JenisKelamin,
 		TinggiBadan:       param.TinggiBadan,
 		BeratBadan:        param.BeratBadan,
@@ -111,10 +110,10 @@ func (u *penggunaUsecase) RegisterPengguna(param model.PengunaRegister) error {
 	}
 
 	riwayatKesehatan := entity.RiwayatKesehatan{
-		IDRiwayat: uuid.New().String(),
+		IDRiwayat:  uuid.New().String(),
 		IDPengguna: pengguna.IDPengguna,
-		
-		NilaiBMI: profilPengguna.BeratBadan / float32(math.Pow(float64(profilPengguna.TinggiBadan) / 100, 2)),
+
+		NilaiBMI: profilPengguna.BeratBadan / float32(math.Pow(float64(profilPengguna.TinggiBadan)/100, 2)),
 	}
 
 	err = u.Repository.RiwayatKesehatanRepository.CreateRiwayatKesehatan(riwayatKesehatan)
@@ -123,12 +122,12 @@ func (u *penggunaUsecase) RegisterPengguna(param model.PengunaRegister) error {
 	}
 
 	progres := entity.ProgresNutrisiHarian{
-		IDProgresNutrisiHarian: uuid.New().String(),
-		IDPengguna: pengguna.IDPengguna,
-		JumlahKonsumsiKalori: 0,
+		IDProgresNutrisiHarian:    uuid.New().String(),
+		IDPengguna:                pengguna.IDPengguna,
+		JumlahKonsumsiKalori:      0,
 		JumlahKonsumsiKarbohidrat: 0,
-		JumlahKonsumsiProtein: 0,
-		JumlahKonsumsiLemak: 0,
+		JumlahKonsumsiProtein:     0,
+		JumlahKonsumsiLemak:       0,
 	}
 
 	err = u.Repository.ProgresNutrisiHarian.CreateProgres(progres)
