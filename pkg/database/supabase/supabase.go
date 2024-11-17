@@ -1,6 +1,8 @@
 package supabase
 
 import (
+	"errors"
+	"fmt"
 	"mime/multipart"
 	"os"
 
@@ -18,7 +20,7 @@ type supabaseStorage struct {
 
 // Delete implements Interface3.
 func (s *supabaseStorage) Delete(link []string) error {
-	_, err := s.client.RemoveFile("user-profile", link)
+	_, err := s.client.RemoveFile("foto-profil", link)
 	if err != nil {
 		return err
 	}
@@ -26,28 +28,40 @@ func (s *supabaseStorage) Delete(link []string) error {
 	return nil
 }
 
-
 func (s *supabaseStorage) Upload(file *multipart.FileHeader) (string, error) {
-	fileBody, err := file.Open() 
-	if err != nil {
-		return "", err
-	}
+    // Membuka file
+	fmt.Println("1")
+    fileBody, err := file.Open()
+    if err != nil {
+        return "", err
+    }
+    defer fileBody.Close() // Pastikan file ditutup setelah digunakan
+	fmt.Println("2")
 
-	bucket := os.Getenv("SUPABASE_BUCKET")
+    // Mendapatkan nama bucket dan file
+    bucket := os.Getenv("SUPABASE_BUCKET")
+    if bucket == "" {
+        return "", errors.New("bucket not defined")
+    }
+	fmt.Println("3")
 
-	fileName := file.Filename
-	contentType := file.Header.Get("Content-Type")
-	_, err = s.client.UploadFile(bucket, fileName, fileBody, storage_go.FileOptions{
-		ContentType: &contentType,
-	})
-	if err != nil {
-		return "", err
-	}
+    fileName := file.Filename
+    contentType := file.Header.Get("Content-Type")
 
-	url := s.client.GetPublicUrl(bucket, fileName).SignedURL
+    // Melakukan upload file ke Supabase
+    _, err = s.client.UploadFile(bucket, fileName, fileBody, storage_go.FileOptions{
+        ContentType: &contentType,
+    })
+    if err != nil {
+        return "", err
+    }
+	fmt.Println("4")
 
-	return url, nil
+    // Mengambil URL publik
+    url := s.client.GetPublicUrl(bucket, fileName).SignedURL
+    return url, nil
 }
+
 
 func Init() Interface {
 	storageClient := storage_go.NewClient(os.Getenv("SUPABASE_URL"), os.Getenv("SUPABASE_TOKEN"), nil)

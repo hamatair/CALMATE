@@ -38,7 +38,8 @@ type ProfilPengguna struct {
 	AktivitasPengguna string
 	Alamat            string
 	NoTeleponPengguna string
-	Foto              string
+	NamaFoto          string
+	LinkFoto          string
 }
 
 type UpdateRiwayatKesehatan struct {
@@ -74,5 +75,5 @@ type ProgresNutrisiHarian struct {
 }
 
 type Foto struct {
-	Photo *multipart.FileHeader
+	Foto *multipart.FileHeader
 }

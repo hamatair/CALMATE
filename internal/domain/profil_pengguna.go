@@ -15,7 +15,8 @@ type ProfilPengguna struct {
 	AktivitasPengguna string    `gorm:"column:aktivitas_pengguna;type:varchar(255)"`
 	Alamat            string    `gorm:"column:alamat;type:text"`
 	NoTeleponPengguna string    `gorm:"column:no_telepon_pengguna;type:varchar(20)"`
-	Foto              string    `gorm:"column:foto;type:varchar(255)"`
+	NamaFoto          string    `gorm:"column:nama_foto;type:varchar(255)"`
+	LinkFoto          string    `gorm:"column:link_foto;type:varchar(255)"`
 
 	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`

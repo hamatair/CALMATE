@@ -70,6 +70,7 @@ func (r *Rest) MountEndpoint() {
 	routerGroup.POST("/login", r.penggunaHandler.Login)
 	routerGroup.GET("/get-profil", r.middleware.AuthenticateUser, r.profilPengguna.GetProfilPengguna)
 	routerGroup.PATCH("/update-profil", r.middleware.AuthenticateUser, r.profilPengguna.UpdateProfilPengguna)
+	routerGroup.PATCH("/upload-foto-profil", r.middleware.AuthenticateUser, r.profilPengguna.UploadFotoProfilPengguna)
 	routerGroup.DELETE("/delete-foto-profil", r.middleware.AuthenticateUser, r.profilPengguna.DeleteFotoProfilPengguna)
 	routerGroup.GET("/get-riwayat-kesehatan", r.middleware.AuthenticateUser, r.riwayatKesehatan.GetRiwayatKesehatan)
 	routerGroup.PATCH("/update-riwayat-kesehatan", r.middleware.AuthenticateUser, r.riwayatKesehatan.UpdateRiwayatKesehatan)

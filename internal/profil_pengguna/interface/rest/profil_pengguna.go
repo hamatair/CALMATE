@@ -60,7 +60,7 @@ func (h *ProfilPenggunaHandler) UpdateProfilPengguna(c *gin.Context){
 		return
 	}
 
-	err = h.Usecase.ProfilPenggunaUsecase.UpdateProfilPengguna(param, newProfil)
+	err = h.Usecase.ProfilPenggunaUsecase.UpdateProfilPengguna(param, newProfil, model.Foto{})
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, "Failed to Update Profil Pengguna", err)
 	}
@@ -79,10 +79,37 @@ func (h *ProfilPenggunaHandler) DeleteFotoProfilPengguna(c *gin.Context) {
 		response.Error(c, http.StatusInternalServerError, "Failed to Casting", errors.New(""))
 	}
 
-	err := h.Usecase.ProfilPenggunaUsecase.DeleteProfilPenggguna(param)
+	err := h.Usecase.ProfilPenggunaUsecase.DeleteFotoProfilPengguna(param)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, "Failed to Delete Foto Profil Pengguna", err)
 	}
 
 	response.Success(c, http.StatusOK, "Success to delete foto profil Pengguna", err)
+}
+
+func (h *ProfilPenggunaHandler) UploadFotoProfilPengguna(c *gin.Context){
+	pengguna, ok := c.Get("pengguna")
+	if !ok {
+		response.Error(c, 404, "Failed Get Login Pengguna", errors.New(""))
+	}
+
+	param, ok := pengguna.(model.PenggunaParam) 
+	if !ok{
+		response.Error(c, 500, "Failed to Cast Pengguna", errors.New("invalid user type"))
+		return
+	}
+
+	foto, err := c.FormFile("foto")
+	if err != nil {
+		response.Success(c, http.StatusBadRequest, "failed to bind input", err)
+		return
+	}
+
+	err = h.Usecase.ProfilPenggunaUsecase.UpdateProfilPengguna(param, model.ProfilPengguna{}, model.Foto{Foto: foto})
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, "Failed to Update Profil Pengguna", err)
+		return
+	}
+
+	response.Success(c, http.StatusOK, "Success to Update Profil Pengguna", nil)
 }

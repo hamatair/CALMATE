@@ -36,7 +36,7 @@ type InitParam struct {
 
 func NewUsecase(param InitParam) *Usecase {
 	penggunaUsecase := pengguna.NewpenggunaUsecase(*param.Repository, param.Bcrypt, param.JwtAuth)
-	profilPenggunaUsecase := profilPengguna.NewProfilPenggunaUsecase(*param.Repository)
+	profilPenggunaUsecase := profilPengguna.NewProfilPenggunaUsecase(*param.Repository, param.Supabase)
 	riwayatKesehatan := riwayatKesehatan.NewriwayatKesehatanUsecase(*param.Repository)
 	rekomendasiNutrisiHarian := rekomendasiNutrisiHarian.NewrekomendasiNutrisiHarianUsecase(*param.Repository)
 	makanan := makanan.NewmakananUsecase(*param.Repository)
