@@ -18,9 +18,8 @@ type IProfilPenggunaUsecase interface {
 
 type profilPenggunaUsecase struct {
 	Repository repository.Repository
-	Supabase supabase.Interface
+	Supabase   supabase.Interface
 }
-
 
 // DeleteProfilPenggguna implements IProfilPenggunaUsecase.
 func (u *profilPenggunaUsecase) DeleteFotoProfilPengguna(param model.PenggunaParam) error {
@@ -39,33 +38,37 @@ func (u *profilPenggunaUsecase) UpdateProfilPengguna(param model.PenggunaParam, 
 		return err
 	}
 
-	if oldProfil.LinkFoto != ""{
+	if oldProfil.LinkFoto != "" {
 		err = u.Supabase.Delete([]string{oldProfil.NamaFoto})
 		if err != nil {
 			return err
 		}
 	}
 
-	var link string
+	var namaFoto string
+	var fotoLink string
 
 	if foto.Foto != nil {
-		link, err = u.Supabase.Upload(foto.Foto)
+		namaFoto = foto.Foto.Filename
+		fotoLink, err = u.Supabase.Upload(foto.Foto)
 		if err != nil {
 			return err
 		}
+	}else{
+		namaFoto = ""
 	}
 
 	newProfil.NamaPengguna = oldProfil.NamaPengguna
 	newProfil.TanggalLahir = oldProfil.TanggalLahir
 	newProfil.JenisKelamin = oldProfil.JenisKelamin
-    newProfil.TinggiBadan = oldProfil.TinggiBadan
-    newProfil.BeratBadan = oldProfil.BeratBadan
-    newProfil.Umur = oldProfil.Umur
-    newProfil.AktivitasPengguna = oldProfil.AktivitasPengguna
-    newProfil.Alamat = oldProfil.Alamat
-    newProfil.NoTeleponPengguna = oldProfil.NoTeleponPengguna
-    newProfil.NamaFoto  = foto.Foto.Filename
-	newProfil.LinkFoto = link
+	newProfil.TinggiBadan = oldProfil.TinggiBadan
+	newProfil.BeratBadan = oldProfil.BeratBadan
+	newProfil.Umur = oldProfil.Umur
+	newProfil.AktivitasPengguna = oldProfil.AktivitasPengguna
+	newProfil.Alamat = oldProfil.Alamat
+	newProfil.NoTeleponPengguna = oldProfil.NoTeleponPengguna
+	newProfil.NamaFoto = namaFoto
+	newProfil.LinkFoto = fotoLink
 
 	err = u.Repository.ProfilPenggunaRepository.UpdateProfilPengguna(param, newProfil)
 	if err != nil {
@@ -92,6 +95,6 @@ func (u *profilPenggunaUsecase) GetProfilPengguna(param model.PenggunaParam) (en
 func NewProfilPenggunaUsecase(repository repository.Repository, supabase supabase.Interface) IProfilPenggunaUsecase {
 	return &profilPenggunaUsecase{
 		Repository: repository,
-		Supabase: supabase,
+		Supabase:   supabase,
 	}
 }
