@@ -43,10 +43,12 @@ func (u *profilPenggunaUsecase) UpdateProfilPengguna(param model.PenggunaParam, 
 	var fotoLink string
 
 	if isFoto {
-		filePath := fmt.Sprintf("%s/%s", oldProfil.IDProfil, oldProfil.NamaFoto)
-		err = u.Supabase.Delete(filePath)
-		if err != nil {
-			return err
+		if oldProfil.LinkFoto != ""{
+			filePath := fmt.Sprintf("%s/%s", oldProfil.IDProfil, oldProfil.NamaFoto)
+			err = u.Supabase.Delete(filePath)
+			if err != nil {
+				return err
+			}
 		}
 
 		namaFoto = foto.Foto.Filename
