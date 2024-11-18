@@ -9,16 +9,16 @@ import (
 )
 
 func Migration(db *gorm.DB) {
-	// db.Migrator().DropTable(
-	// 	&entity.Pengguna{},
-	// 	&entity.ProfilPengguna{},
-	// 	&entity.RiwayatKesehatan{},
-	// 	&entity.RekomendasiNutrisiHarian{},
-	// 	&entity.ProgresNutrisiHarian{},
-	// 	&entity.Artikel{},
-	// 	&entity.Administrator{},
-	// 	&entity.Makanan{},
-	// )
+	db.Migrator().DropTable(
+		&entity.Pengguna{},
+		&entity.ProfilPengguna{},
+		&entity.RiwayatKesehatan{},
+		&entity.RekomendasiNutrisiHarian{},
+		&entity.ProgresNutrisiHarian{},
+		&entity.Artikel{},
+		&entity.Administrator{},
+		&entity.Makanan{},
+	)
 
 	// Migrasi tabel pengguna terlebih dahulu
 	if err := db.AutoMigrate(&entity.Pengguna{}); err != nil {

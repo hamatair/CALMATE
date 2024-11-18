@@ -35,7 +35,6 @@ func (u *makananUsecase) CreateMakanan(param model.Makanan) error {
 		Karbohidrat: param.Karbohidrat,
 		Protein:     param.Protein,
 		Lemak:       param.Lemak,
-		Gambar:      param.Gambar,
 	}
 
 	err := u.Repository.Makanan.CreateMakanan(makanan)
