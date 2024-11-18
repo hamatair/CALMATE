@@ -61,7 +61,7 @@ func (h *ProfilPenggunaHandler) UpdateProfilPengguna(c *gin.Context){
 		return
 	}
 
-	err = h.Usecase.ProfilPenggunaUsecase.UpdateProfilPengguna(param, newProfil, model.Foto{Foto: nil})
+	err = h.Usecase.ProfilPenggunaUsecase.UpdateProfilPengguna(param, newProfil, model.Foto{Foto: nil}, false)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, "Failed to Update Profil Pengguna", err)
 		return
@@ -107,7 +107,7 @@ func (h *ProfilPenggunaHandler) UploadFotoProfilPengguna(c *gin.Context){
 		return
 	}
 
-	err = h.Usecase.ProfilPenggunaUsecase.UpdateProfilPengguna(param, model.ProfilPengguna{}, model.Foto{Foto: foto})
+	err = h.Usecase.ProfilPenggunaUsecase.UpdateProfilPengguna(param, model.ProfilPengguna{}, model.Foto{Foto: foto}, true)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, "Failed to Update Profil Pengguna", err)
 		return

@@ -12,7 +12,7 @@ import (
 
 type IProfilPenggunaUsecase interface {
 	GetProfilPengguna(model.PenggunaParam) (entity.ProfilPengguna, error)
-	UpdateProfilPengguna(model.PenggunaParam, model.ProfilPengguna, model.Foto) error
+	UpdateProfilPengguna(model.PenggunaParam, model.ProfilPengguna, model.Foto, bool) error
 	DeleteFotoProfilPengguna(model.PenggunaParam) error
 }
 
@@ -32,43 +32,42 @@ func (u *profilPenggunaUsecase) DeleteFotoProfilPengguna(param model.PenggunaPar
 }
 
 // UpdateProfilPengguna implements IProfilPenggunaUsecase.
-func (u *profilPenggunaUsecase) UpdateProfilPengguna(param model.PenggunaParam, newProfil model.ProfilPengguna, foto model.Foto) error {
+func (u *profilPenggunaUsecase) UpdateProfilPengguna(param model.PenggunaParam, newProfil model.ProfilPengguna, foto model.Foto, isFoto bool) error {
 	oldProfil, err := u.Repository.ProfilPenggunaRepository.GetProfilPengguna(param)
 	if err != nil {
 		return err
 	}
 
-	if oldProfil.LinkFoto != "" {
+	var namaFoto string
+	var fotoLink string
+
+	if isFoto {
 		err = u.Supabase.Delete([]string{oldProfil.NamaFoto})
 		if err != nil {
 			return err
 		}
-	}
 
-	var namaFoto string
-	var fotoLink string
-
-	if foto.Foto != nil {
 		namaFoto = foto.Foto.Filename
 		fotoLink, err = u.Supabase.Upload(foto.Foto)
 		if err != nil {
 			return err
 		}
-	}else{
-		namaFoto = ""
-	}
 
-	newProfil.NamaPengguna = oldProfil.NamaPengguna
-	newProfil.TanggalLahir = oldProfil.TanggalLahir
-	newProfil.JenisKelamin = oldProfil.JenisKelamin
-	newProfil.TinggiBadan = oldProfil.TinggiBadan
-	newProfil.BeratBadan = oldProfil.BeratBadan
-	newProfil.Umur = oldProfil.Umur
-	newProfil.AktivitasPengguna = oldProfil.AktivitasPengguna
-	newProfil.Alamat = oldProfil.Alamat
-	newProfil.NoTeleponPengguna = oldProfil.NoTeleponPengguna
-	newProfil.NamaFoto = namaFoto
-	newProfil.LinkFoto = fotoLink
+		newProfil.NamaPengguna = oldProfil.NamaPengguna
+		newProfil.TanggalLahir = oldProfil.TanggalLahir
+		newProfil.JenisKelamin = oldProfil.JenisKelamin
+		newProfil.TinggiBadan = oldProfil.TinggiBadan
+		newProfil.BeratBadan = oldProfil.BeratBadan
+		newProfil.Umur = oldProfil.Umur
+		newProfil.AktivitasPengguna = oldProfil.AktivitasPengguna
+		newProfil.Alamat = oldProfil.Alamat
+		newProfil.NoTeleponPengguna = oldProfil.NoTeleponPengguna
+		newProfil.NamaFoto = namaFoto
+		newProfil.LinkFoto = fotoLink
+	}else{
+		newProfil.NamaFoto = oldProfil.NamaFoto
+		newProfil.LinkFoto = oldProfil.LinkFoto
+	}
 
 	err = u.Repository.ProfilPenggunaRepository.UpdateProfilPengguna(param, newProfil)
 	if err != nil {
