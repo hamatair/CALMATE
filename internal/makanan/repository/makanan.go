@@ -17,7 +17,7 @@ type MakananRepository struct {
 // GetMakanan implements IMakananRepository.
 func (r *MakananRepository) GetMakanan(nama string) ([]entity.Makanan, error) {
 	var makanan []entity.Makanan
-	err := r.db.Debug().Where("nama LIKE ?", nama).Find(&makanan).Error
+	err := r.db.Debug().Where("nama LIKE ?", "%"+nama+"%").Find(&makanan).Error
 	if err != nil {
 		return []entity.Makanan{}, err
 	}
