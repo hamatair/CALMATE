@@ -44,6 +44,7 @@ func (h *ProfilPenggunaHandler) UpdateProfilPengguna(c *gin.Context){
 	pengguna, ok := c.Get("pengguna")
 	if !ok {
 		response.Error(c, 404, "Failed Get Login Pengguna", errors.New(""))
+		return
 	}
 
 	param, ok := pengguna.(model.PenggunaParam) 
@@ -63,6 +64,7 @@ func (h *ProfilPenggunaHandler) UpdateProfilPengguna(c *gin.Context){
 	err = h.Usecase.ProfilPenggunaUsecase.UpdateProfilPengguna(param, newProfil, model.Foto{Foto: nil})
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, "Failed to Update Profil Pengguna", err)
+		return
 	}
 
 	response.Success(c, http.StatusOK, "SUccess to Update Profil Pengguna", nil)
