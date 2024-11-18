@@ -48,7 +48,7 @@ func (u *profilPenggunaUsecase) UpdateProfilPengguna(param model.PenggunaParam, 
 		}
 
 		namaFoto = foto.Foto.Filename
-		fotoLink, err = u.Supabase.Upload(foto.Foto)
+		fotoLink, err = u.Supabase.Upload(foto.Foto, oldProfil.IDProfil)
 		if err != nil {
 			return err
 		}

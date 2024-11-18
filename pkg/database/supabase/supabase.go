@@ -10,7 +10,7 @@ import (
 )
 
 type Interface interface {
-	Upload(file *multipart.FileHeader) (string, error)
+	Upload(file *multipart.FileHeader, folderName string) (string, error)
 	Delete(link []string) error
 }
 
@@ -28,7 +28,7 @@ func (s *supabaseStorage) Delete(link []string) error {
 	return nil
 }
 
-func (s *supabaseStorage) Upload(file *multipart.FileHeader) (string, error) {
+func (s *supabaseStorage) Upload(file *multipart.FileHeader, folderName string) (string, error) {
     // Membuka file
 	fmt.Println("1")
     fileBody, err := file.Open()
@@ -48,8 +48,10 @@ func (s *supabaseStorage) Upload(file *multipart.FileHeader) (string, error) {
     fileName := file.Filename
     contentType := file.Header.Get("Content-Type")
 
+    filePath := fmt.Sprintf("%s/%s", folderName, fileName)
+
     // Melakukan upload file ke Supabase
-    _, err = s.client.UploadFile(bucket, fileName, fileBody, storage_go.FileOptions{
+    _, err = s.client.UploadFile(bucket, filePath, fileBody, storage_go.FileOptions{
         ContentType: &contentType,
     })
     if err != nil {
