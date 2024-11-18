@@ -11,7 +11,6 @@ type Makanan struct {
 	Karbohidrat float32 `gorm:"column:karbohidrat;type:float"`
 	Protein     float32 `gorm:"column:protein;type:float"`
 	Lemak       float32 `gorm:"column:lemak;type:float"`
-	Gambar      string  `gorm:"column:gambar"`
 
 	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
