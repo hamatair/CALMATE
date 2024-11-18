@@ -46,7 +46,7 @@ func (h *MakananHandler) GetMakanan(c *gin.Context){
         return
     }
 
-    makanan, err := h.Usecase.Makanan.GetMakanan(param.Jenis)
+    makanan, err := h.Usecase.Makanan.GetMakanan(param.Nama)
     if err != nil {
         response.Error(c, http.StatusInternalServerError, "Failed to Get Makanan", err)
     }

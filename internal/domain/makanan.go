@@ -7,7 +7,6 @@ import (
 type Makanan struct {
 	IDMakanan   string  `gorm:"column:id_makanan;primaryKey"`
 	Nama        string  `gorm:"column:nama"`
-	Jenis       string  `gorm:"column:jenis"`
 	Kalori      float32 `gorm:"column:kalori;type:float"`
 	Karbohidrat float32 `gorm:"column:karbohidrat;type:float"`
 	Protein     float32 `gorm:"column:protein;type:float"`

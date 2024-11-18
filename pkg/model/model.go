@@ -64,7 +64,7 @@ type Makanan struct {
 }
 
 type GetMakanan struct {
-	Jenis string
+	Nama string
 }
 
 type ProgresNutrisiHarian struct {

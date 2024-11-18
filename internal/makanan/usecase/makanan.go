@@ -17,8 +17,8 @@ type makananUsecase struct {
 }
 
 // GetMakanan implements IMakananUsecase.
-func (u *makananUsecase) GetMakanan(jenis string) ([]entity.Makanan, error) {
-	makanan, err := u.Repository.Makanan.GetMakanan(jenis)
+func (u *makananUsecase) GetMakanan(nama string) ([]entity.Makanan, error) {
+	makanan, err := u.Repository.Makanan.GetMakanan(nama)
 	if err != nil {
 		return []entity.Makanan{}, err
 	}
@@ -30,7 +30,6 @@ func (u *makananUsecase) GetMakanan(jenis string) ([]entity.Makanan, error) {
 func (u *makananUsecase) CreateMakanan(param model.Makanan) error {
 	makanan := entity.Makanan{
 		IDMakanan:   uuid.New().String(),
-		Jenis:       param.Jenis,
 		Nama:        param.Nama,
 		Kalori:      param.Kalori,
 		Karbohidrat: param.Karbohidrat,
