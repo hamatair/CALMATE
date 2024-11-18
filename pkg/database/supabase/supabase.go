@@ -22,6 +22,7 @@ type supabaseStorage struct {
 func (s *supabaseStorage) Delete(filePath string) error {
 	// Memastikan path lengkap file yang ingin dihapus
 	_, err := s.client.RemoveFile("foto-profil", []string{filePath})
+    fmt.Println(filePath)
 	if err != nil {
 		// Jika terjadi error, bisa jadi file tidak ada
 		return fmt.Errorf("gagal menghapus file dengan path %s: %v", filePath, err)
