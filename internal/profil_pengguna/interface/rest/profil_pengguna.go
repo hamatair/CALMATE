@@ -24,6 +24,7 @@ func (h *ProfilPenggunaHandler) GetProfilPengguna(c *gin.Context) {
 	pengguna, ok := c.Get("pengguna")
 	if !ok {
 		response.Error(c, 404, "Failed Get Login Pengguna", errors.New(""))
+		return
 	}
 
 	param, ok := pengguna.(model.PenggunaParam) 
@@ -35,6 +36,7 @@ func (h *ProfilPenggunaHandler) GetProfilPengguna(c *gin.Context) {
 	profilPengguna, err := h.Usecase.ProfilPenggunaUsecase.GetProfilPengguna(param)
 	if err != nil {
 		response.Error(c, 404, "Failed to get Profil Pengguna", err)
+		return
 	}
 	response.Success(c, 200, "Success to Get Profil Pengguna", profilPengguna)
 	
