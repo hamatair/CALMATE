@@ -43,20 +43,24 @@ func (u *profilPenggunaUsecase) UpdateProfilPengguna(param model.PenggunaParam, 
 	var fotoLink string
 
 	if isFoto {
-		if oldProfil.LinkFoto != ""{
+		// Jika ada foto lama, hapus file tersebut
+		if oldProfil.LinkFoto != "" {
+			// Buat path lengkap untuk file yang ingin dihapus
 			filePath := fmt.Sprintf("%s/%s", oldProfil.IDProfil, oldProfil.NamaFoto)
-			err = u.Supabase.Delete(filePath)
+			err = u.Supabase.Delete(filePath) // Hapus foto lama
 			if err != nil {
 				return err
 			}
 		}
 
+		// Upload foto baru
 		namaFoto = foto.Foto.Filename
-		fotoLink, err = u.Supabase.Upload(foto.Foto, oldProfil.IDProfil)
+		fotoLink, err = u.Supabase.Upload(foto.Foto, oldProfil.IDProfil) // Gunakan IDProfil sebagai folder
 		if err != nil {
 			return err
 		}
 
+		// Update profil pengguna
 		newProfil.NamaPengguna = oldProfil.NamaPengguna
 		newProfil.TanggalLahir = oldProfil.TanggalLahir
 		newProfil.JenisKelamin = oldProfil.JenisKelamin
@@ -68,18 +72,21 @@ func (u *profilPenggunaUsecase) UpdateProfilPengguna(param model.PenggunaParam, 
 		newProfil.NoTeleponPengguna = oldProfil.NoTeleponPengguna
 		newProfil.NamaFoto = namaFoto
 		newProfil.LinkFoto = fotoLink
-	}else{
+	} else {
+		// Jika tidak ada foto baru, gunakan foto lama
 		newProfil.NamaFoto = oldProfil.NamaFoto
 		newProfil.LinkFoto = oldProfil.LinkFoto
 	}
 
+	// Update profil pengguna di database
 	err = u.Repository.ProfilPenggunaRepository.UpdateProfilPengguna(param, newProfil)
 	if err != nil {
 		return err
 	}
 
-	return err
+	return nil
 }
+
 
 // GetProfilPengguna implements IProfilPenggunaUsecase.
 func (u *profilPenggunaUsecase) GetProfilPengguna(param model.PenggunaParam) (entity.ProfilPengguna, error) {

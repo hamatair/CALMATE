@@ -20,49 +20,49 @@ type supabaseStorage struct {
 
 // Delete implements Interface3.
 func (s *supabaseStorage) Delete(filePath string) error {
+	// Memastikan path lengkap file yang ingin dihapus
 	_, err := s.client.RemoveFile("foto-profil", []string{filePath})
 	if err != nil {
-		return err
+		// Jika terjadi error, bisa jadi file tidak ada
+		return fmt.Errorf("gagal menghapus file dengan path %s: %v", filePath, err)
 	}
 
 	return nil
 }
 
+
 func (s *supabaseStorage) Upload(file *multipart.FileHeader, folderName string) (string, error) {
-    // Membuka file
-	fmt.Println("1")
-    fileBody, err := file.Open()
-    if err != nil {
-        return "", err
-    }
-    defer fileBody.Close() // Pastikan file ditutup setelah digunakan
-	fmt.Println("2")
+	// Membuka file
+	fileBody, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer fileBody.Close() // Pastikan file ditutup setelah digunakan
 
-    // Mendapatkan nama bucket dan file
-    bucket := os.Getenv("SUPABASE_BUCKET")
-    if bucket == "" {
-        return "", errors.New("bucket not defined")
-    }
-	fmt.Println("3")
+	// Mendapatkan nama bucket dan file
+	bucket := os.Getenv("SUPABASE_BUCKET")
+	if bucket == "" {
+		return "", errors.New("bucket not defined")
+	}
 
-    fileName := file.Filename
-    contentType := file.Header.Get("Content-Type")
+	// Membuat path lengkap untuk file (folder + file)
+	fileName := file.Filename
+	contentType := file.Header.Get("Content-Type")
+	filePath := fmt.Sprintf("%s/%s", folderName, fileName)
 
-    filePath := fmt.Sprintf("%s/%s", folderName, fileName)
+	// Melakukan upload file ke Supabase
+	_, err = s.client.UploadFile(bucket, filePath, fileBody, storage_go.FileOptions{
+		ContentType: &contentType,
+	})
+	if err != nil {
+		return "", err
+	}
 
-    // Melakukan upload file ke Supabase
-    _, err = s.client.UploadFile(bucket, filePath, fileBody, storage_go.FileOptions{
-        ContentType: &contentType,
-    })
-    if err != nil {
-        return "", err
-    }
-	fmt.Println("4")
-
-    // Mengambil URL publik
-    url := s.client.GetPublicUrl(bucket, fileName).SignedURL
-    return url, nil
+	// Mengambil URL publik untuk file yang di-upload
+	url := s.client.GetPublicUrl(bucket, filePath).SignedURL
+	return url, nil
 }
+
 
 
 func Init() Interface {
