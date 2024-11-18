@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 
 	entity "github.com/bccfilkom-be/go-server/internal/domain"
 	"github.com/bccfilkom-be/go-server/internal/repository"
@@ -42,7 +43,8 @@ func (u *profilPenggunaUsecase) UpdateProfilPengguna(param model.PenggunaParam, 
 	var fotoLink string
 
 	if isFoto {
-		err = u.Supabase.Delete([]string{oldProfil.NamaFoto})
+		filePath := fmt.Sprintf("%s/%s", oldProfil.IDProfil, oldProfil.NamaFoto)
+		err = u.Supabase.Delete(filePath)
 		if err != nil {
 			return err
 		}

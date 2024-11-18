@@ -11,7 +11,7 @@ import (
 
 type Interface interface {
 	Upload(file *multipart.FileHeader, folderName string) (string, error)
-	Delete(link []string) error
+	Delete(link string) error
 }
 
 type supabaseStorage struct {
@@ -19,8 +19,8 @@ type supabaseStorage struct {
 }
 
 // Delete implements Interface3.
-func (s *supabaseStorage) Delete(link []string) error {
-	_, err := s.client.RemoveFile("foto-profil", link)
+func (s *supabaseStorage) Delete(filePath string) error {
+	_, err := s.client.RemoveFile("foto-profil", []string{filePath})
 	if err != nil {
 		return err
 	}
