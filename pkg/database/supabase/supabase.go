@@ -1,8 +1,6 @@
 package supabase
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"mime/multipart"
@@ -36,28 +34,22 @@ type supabaseStorage struct {
 
 func (s *supabaseStorage) Delete(filePath string) error {
 	bucketName := os.Getenv("SUPABASE_BUCKET")
-	// URL endpoint Supabase untuk menghapus file
-	url := fmt.Sprintf("%s/%s", os.Getenv("SUPABASE_URL") + "/storage/v1", bucketName)
+	if bucketName == "" {
+		return errors.New("bucket name is not defined")
+	}
 
-	// Membuat body request JSON
-	body := map[string]interface{}{
-		"prefixes": []string{filePath},
-	}
-	jsonBody, err := json.Marshal(body)
-	if err != nil {
-		return fmt.Errorf("gagal membuat JSON body: %v", err)
-	}
+	// URL endpoint Supabase untuk menghapus file
+	url := fmt.Sprintf("%s/storage/v1/object/%s/%s", os.Getenv("SUPABASE_URL"), bucketName, filePath)
 
 	// Membuat request HTTP DELETE
-	req, err := http.NewRequest(http.MethodDelete, url, bytes.NewBuffer(jsonBody))
+	req, err := http.NewRequest(http.MethodDelete, url, nil)
 	if err != nil {
 		return fmt.Errorf("gagal membuat request HTTP: %v", err)
 	}
 
 	// Menambahkan header autentikasi
 	req.Header.Set("apikey", os.Getenv("SUPABASE_TOKEN"))
-	req.Header.Set("Authorization", "Bearer "+ os.Getenv("SUPABASE_TOKEN"))
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+os.Getenv("SUPABASE_TOKEN"))
 
 	// Eksekusi request
 	client := &http.Client{}
@@ -68,8 +60,12 @@ func (s *supabaseStorage) Delete(filePath string) error {
 	defer resp.Body.Close()
 
 	// Mengecek status kode HTTP
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("gagal menghapus file %s status code: %d", filePath, resp.StatusCode)
+	if resp.StatusCode == http.StatusNotFound {
+		return fmt.Errorf("file tidak ditemukan: %s (status code: 404)", filePath)
+	}
+
+	if resp.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("gagal menghapus file %s (status code: %d)", filePath, resp.StatusCode)
 	}
 
 	fmt.Printf("File %s berhasil dihapus dari bucket %s\n", filePath, bucketName)
