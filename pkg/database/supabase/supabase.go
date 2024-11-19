@@ -48,7 +48,7 @@ func (s *supabaseStorage) Delete(filePath string) error {
 	}
 
 	// Menambahkan header autentikasi
-	req.Header.Set("apikey", os.Getenv("SUPABASE_TOKEN"))
+	req.Header.Set("apikey", os.Getenv("SUPABASE_APIKEY"))
 	req.Header.Set("Authorization", "Bearer "+os.Getenv("SUPABASE_TOKEN"))
 
 	// Eksekusi request
@@ -108,7 +108,7 @@ func (s *supabaseStorage) Upload(file *multipart.FileHeader, folderName string) 
 
 
 func Init() Interface {
-	storageClient := storage_go.NewClient(os.Getenv("SUPABASE_URL"), os.Getenv("SUPABASE_TOKEN"), nil)
+	storageClient := storage_go.NewClient(os.Getenv("SUPABASE_URL"), os.Getenv("SUPABASE_APIKEY"), nil)
 	return &supabaseStorage{
 		client: storageClient,
 	}
