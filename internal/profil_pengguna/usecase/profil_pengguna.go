@@ -45,7 +45,7 @@ func (u *profilPenggunaUsecase) UpdateProfilPengguna(param model.PenggunaParam, 
 	if isFoto {
 		// Jika ada foto lama, hapus file tersebut
 			if oldProfil.LinkFoto != "" {
-				filePath := oldProfil.IDProfil
+				filePath := fmt.Sprintf("%s/%s", oldProfil.IDProfil, oldProfil.NamaFoto)
 				fmt.Printf("Mencoba menghapus file: %s\n", filePath)
 				err = u.Supabase.Delete(filePath)
 				if err != nil {
