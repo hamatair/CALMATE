@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/bccfilkom-be/go-server/internal/usecase"
@@ -40,9 +41,9 @@ func (h *MakananHandler) CreateMakanan(c *gin.Context) {
 
 func (h *MakananHandler) GetMakanan(c *gin.Context){
     param := model.GetMakanan{}
-    err := c.ShouldBindJSON(&param)
-    if err != nil {
-        response.Error(c, http.StatusBadRequest, "Failed to Bind JSON", err)
+    param.Nama = c.Query("nama")
+    if param.Nama == "" {
+        response.Error(c, http.StatusBadRequest, "Parameneter Name is required", errors.New(""))
         return
     }
 
