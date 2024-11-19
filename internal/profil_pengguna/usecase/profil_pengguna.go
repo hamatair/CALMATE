@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 
 	entity "github.com/bccfilkom-be/go-server/internal/domain"
 	"github.com/bccfilkom-be/go-server/internal/repository"
@@ -44,14 +43,14 @@ func (u *profilPenggunaUsecase) UpdateProfilPengguna(param model.PenggunaParam, 
 
 	if isFoto {
 		// Jika ada foto lama, hapus file tersebut
-			if oldProfil.LinkFoto != "" {
-				filePath := fmt.Sprintf("%s/%s", oldProfil.IDProfil, oldProfil.NamaFoto)
-				fmt.Printf("Mencoba menghapus file: %s\n", filePath)
-				err = u.Supabase.Delete(filePath)
-				if err != nil {
-					return fmt.Errorf("gagal menghapus file lama: %v", err)
-				}
-			}
+			// if oldProfil.LinkFoto != "" {
+			// 	filePath := fmt.Sprintf("%s/%s", oldProfil.IDProfil, oldProfil.NamaFoto)
+			// 	fmt.Printf("Mencoba menghapus file: %s\n", filePath)
+			// 	err = u.Supabase.Delete(filePath)
+			// 	if err != nil {
+			// 		return fmt.Errorf("gagal menghapus file lama: %v", err)
+			// 	}
+			// }
 
 
 		// Upload foto baru
