@@ -61,7 +61,7 @@ func (s *supabaseStorage) Delete(filePath string) error {
 	// Step 3: Delete each file
 	for _, file := range files {
 		// URL endpoint Supabase untuk menghapus file
-		url := fmt.Sprintf("%s/object/%s/%s", os.Getenv("SUPABASE_URL"), bucketName, file)
+		url := fmt.Sprintf("%s/object/public/%s/%s", os.Getenv("SUPABASE_URL"), bucketName, file)
 
 		// Membuat request HTTP DELETE
 		req, err := http.NewRequest(http.MethodDelete, url, nil)
@@ -106,7 +106,7 @@ func (s *supabaseStorage) Delete(filePath string) error {
 // Fungsi tambahan untuk mengambil daftar file
 func (s *supabaseStorage) ListObjects(bucketName, path string) ([]string, error) {
 	// URL endpoint untuk list objek
-	url := fmt.Sprintf("%s/object/list/%s", os.Getenv("SUPABASE_URL"), bucketName)
+	url := fmt.Sprintf("%s/object/public/list/%s", os.Getenv("SUPABASE_URL"), bucketName)
 
 	// Membuat body request untuk list objek
 	body := map[string]interface{}{
