@@ -39,6 +39,21 @@ func (s *supabaseStorage) Delete(filePath string) error {
 		return errors.New("bucket name is not defined")
 	}
 
+	result, err := s.client.ListFiles(bucketName,filePath,storage_go.FileSearchOptions{
+		Limit: 1,
+		Offset: 1,
+		SortByOptions: storage_go.SortBy{
+			Column: "",
+			Order: "",
+		},
+	})
+	if err != nil {
+		return fmt.Errorf("gagal ambil list: %v", err)
+
+	}
+
+	fmt.Println(result)
+
 	// URL endpoint Supabase untuk menghapus file
 	url := fmt.Sprintf("%s/object/%s/%s/", os.Getenv("SUPABASE_URL"), bucketName, filePath)
 
@@ -105,7 +120,7 @@ func (s *supabaseStorage) Upload(file *multipart.FileHeader, folderName string) 
 	if err != nil {
 		return "", err
 	}
-
+	
 	// Mengambil URL publik untuk file yang di-upload
 	url := s.client.GetPublicUrl(bucket, filePath).SignedURL
 	return url, nil
