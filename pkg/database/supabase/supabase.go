@@ -13,7 +13,7 @@ import (
 
 type Interface interface {
 	Upload(file *multipart.FileHeader, folderName string) (string, error)
-	Delete(link string) error
+	Delete(string, string) error
 }
 
 type supabaseStorage struct {
@@ -21,20 +21,20 @@ type supabaseStorage struct {
 }
 
 // Delete implements Interface3.
-// func (s *supabaseStorage) Delete(filePath string) error {
+// func (s *supabaseStorage) Delete(folder string) error {
 // 	// Memastikan path lengkap file yang ingin dihapus
-// 	_, err := s.client.RemoveFile("foto-profil", []string{filePath})
-//     fmt.Println(filePath)
+// 	_, err := s.client.RemoveFile("foto-profil", []string{folder})
+//     fmt.Println(folder)
 // 	if err != nil {
 // 		// Jika terjadi error, bisa jadi file tidak ada
-// 		return fmt.Errorf("gagal menghapus file dengan path %s: %v", filePath, err)
+// 		return fmt.Errorf("gagal menghapus file dengan path %s: %v", folder, err)
 // 	}
 
 // 	return nil
 // }
 
-func (s *supabaseStorage) Delete(filePath string) error {
-    fmt.Printf("Memulai proses penghapusan file: %s\n", filePath)
+func (s *supabaseStorage) Delete(folder string, file string) error {
+    fmt.Printf("Memulai proses penghapusan file: %s\n", folder)
 
     // Ambil nama bucket dari environment variable
     bucketName := os.Getenv("SUPABASE_BUCKET")
@@ -45,7 +45,7 @@ func (s *supabaseStorage) Delete(filePath string) error {
 
     // Periksa apakah file ada di bucket sebelum menghapus
     fmt.Println("Memeriksa keberadaan file sebelum menghapus...")
-    result, err := s.client.ListFiles(bucketName, filePath, storage_go.FileSearchOptions{
+    result, err := s.client.ListFiles(bucketName, folder, storage_go.FileSearchOptions{
         Limit:  1,
         Offset: 0,
         SortByOptions: storage_go.SortBy{
@@ -60,15 +60,15 @@ func (s *supabaseStorage) Delete(filePath string) error {
     // Debug hasil pengecekan file
     fmt.Printf("Hasil pencarian file: %+v\n", result)
     if len(result) == 0 {
-        return fmt.Errorf("file tidak ditemukan di bucket: %s", filePath)
+        return fmt.Errorf("file tidak ditemukan di bucket: %s", folder)
     }
 
     // URL endpoint Supabase untuk menghapus file
-    url := fmt.Sprintf("%s/storage/v1/object/%s/%s", os.Getenv("SUPABASE_URL"), bucketName, filePath)
+    url := fmt.Sprintf("%s/storage/v1/object/%s/%s", os.Getenv("SUPABASE_URL"), bucketName, folder)
     fmt.Printf("Endpoint DELETE untuk file: %s\n", url)
 
     // Membuat request HTTP DELETE
-    req, err := http.NewRequest(http.MethodDelete, url, nil)
+    req, err := http.NewRequest(http.MethodDelete, url + "/" + file, nil)
     if err != nil {
         return fmt.Errorf("gagal membuat request HTTP: %v", err)
     }
@@ -98,14 +98,14 @@ func (s *supabaseStorage) Delete(filePath string) error {
 
     // Mengecek status kode HTTP
     if resp.StatusCode == http.StatusNotFound {
-        return fmt.Errorf("file tidak ditemukan: %s (status code: 404), response: %s", filePath, string(body))
+        return fmt.Errorf("file tidak ditemukan: %s (status code: 404), response: %s", folder, string(body))
     }
 
     if resp.StatusCode != http.StatusNoContent {
-        return fmt.Errorf("gagal menghapus file %s (status code: %d), response: %s", filePath, resp.StatusCode, string(body))
+        return fmt.Errorf("gagal menghapus file %s (status code: %d), response: %s", folder, resp.StatusCode, string(body))
     }
 
-    fmt.Printf("File %s berhasil dihapus dari bucket %s\n", filePath, bucketName)
+    fmt.Printf("File %s berhasil dihapus dari bucket %s\n", folder, bucketName)
     return nil
 }
 
@@ -127,10 +127,10 @@ func (s *supabaseStorage) Upload(file *multipart.FileHeader, folderName string) 
 	// Membuat path lengkap untuk file (folder + file)
 	fileName := file.Filename
 	contentType := file.Header.Get("Content-Type")
-	filePath := fmt.Sprintf("%s/%s", folderName, fileName)
+	folder := fmt.Sprintf("%s/%s", folderName, fileName)
 
 	// Melakukan upload file ke Supabase
-	_, err = s.client.UploadFile(bucket, filePath, fileBody, storage_go.FileOptions{
+	_, err = s.client.UploadFile(bucket, folder, fileBody, storage_go.FileOptions{
 		ContentType: &contentType,
 	})
 	if err != nil {
@@ -138,7 +138,7 @@ func (s *supabaseStorage) Upload(file *multipart.FileHeader, folderName string) 
 	}
 	
 	// Mengambil URL publik untuk file yang di-upload
-	url := s.client.GetPublicUrl(bucket, filePath).SignedURL
+	url := s.client.GetPublicUrl(bucket, folder).SignedURL
 	return url, nil
 }
 
