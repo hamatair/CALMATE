@@ -45,8 +45,8 @@ func (s *supabaseStorage) Delete(folder string, file string) error {
 
     // Periksa apakah file ada di bucket sebelum menghapus
     fmt.Println("Memeriksa keberadaan file sebelum menghapus...")
-    result, err := s.client.ListFiles(bucketName, folder+"/alhamdulillah.png", storage_go.FileSearchOptions{
-        Limit:  1,
+    result, err := s.client.ListFiles(bucketName, folder, storage_go.FileSearchOptions{
+        Limit:  3,
         Offset: 0,
         SortByOptions: storage_go.SortBy{
             Column: "",
@@ -64,7 +64,7 @@ func (s *supabaseStorage) Delete(folder string, file string) error {
     }
 
     // URL endpoint Supabase untuk menghapus file
-    url := fmt.Sprintf("%s/storage/v1/object/%s/%s", os.Getenv("SUPABASE_URL"), bucketName, folder)
+    url := fmt.Sprintf("%s/storage/object/%s/%s", os.Getenv("SUPABASE_URL"), bucketName, folder+"/"+file)
     fmt.Printf("Endpoint DELETE untuk file: %s\n", url)
 
     // Membuat request HTTP DELETE
