@@ -3,6 +3,7 @@ package supabase
 import (
 	"errors"
 	"fmt"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -39,7 +40,7 @@ func (s *supabaseStorage) Delete(filePath string) error {
 	}
 
 	// URL endpoint Supabase untuk menghapus file
-	url := fmt.Sprintf("%s/object/%s/%s", os.Getenv("SUPABASE_URL"), bucketName, filePath)
+	url := fmt.Sprintf("%s/storage/v1/object/%s/%s", os.Getenv("SUPABASE_URL"), bucketName, filePath)
 
 	// Membuat request HTTP DELETE
 	req, err := http.NewRequest(http.MethodDelete, url, nil)
@@ -59,18 +60,25 @@ func (s *supabaseStorage) Delete(filePath string) error {
 	}
 	defer resp.Body.Close()
 
+	// Membaca isi body respons
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("gagal membaca respons dari Supabase: %v", err)
+	}
+
 	// Mengecek status kode HTTP
 	if resp.StatusCode == http.StatusNotFound {
-		return fmt.Errorf("file tidak ditemukan: %s (status code: 404)", filePath)
+		return fmt.Errorf("file tidak ditemukan: %s (status code: 404), response: %s", filePath, string(body))
 	}
 
 	if resp.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("gagal menghapus file %s (status code: %d) %s", filePath, resp.StatusCode, resp.Request.Response.Status)
+		return fmt.Errorf("gagal menghapus file %s (status code: %d), response: %s", filePath, resp.StatusCode, string(body))
 	}
 
 	fmt.Printf("File %s berhasil dihapus dari bucket %s\n", filePath, bucketName)
 	return nil
 }
+
 
 
 func (s *supabaseStorage) Upload(file *multipart.FileHeader, folderName string) (string, error) {
