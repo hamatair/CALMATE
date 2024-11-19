@@ -37,7 +37,7 @@ type supabaseStorage struct {
 func (s *supabaseStorage) Delete(filePath string) error {
 	bucketName := os.Getenv("SUPABASE_BUCKET")
 	// URL endpoint Supabase untuk menghapus file
-	url := fmt.Sprintf("%s/object/%s", os.Getenv("SUPABASE_URL") + "/storage/v1", bucketName)
+	url := fmt.Sprintf("%s/%s", os.Getenv("SUPABASE_URL") + "/storage/v1", bucketName)
 
 	// Membuat body request JSON
 	body := map[string]interface{}{
