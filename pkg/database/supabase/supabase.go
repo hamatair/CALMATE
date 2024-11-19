@@ -40,7 +40,7 @@ func (s *supabaseStorage) Delete(filePath string) error {
 	}
 
 	// URL endpoint Supabase untuk menghapus file
-	url := fmt.Sprintf("%s/object/public/%s/%s/", os.Getenv("SUPABASE_URL"), bucketName, filePath)
+	url := fmt.Sprintf("%s/object/folder/%s/%s/", os.Getenv("SUPABASE_URL"), bucketName, filePath)
 
 	// Membuat request HTTP DELETE
 	req, err := http.NewRequest(http.MethodDelete, url, nil)
@@ -79,8 +79,6 @@ func (s *supabaseStorage) Delete(filePath string) error {
 	return nil
 }
 
-
-
 func (s *supabaseStorage) Upload(file *multipart.FileHeader, folderName string) (string, error) {
 	// Membuka file
 	fileBody, err := file.Open()
@@ -112,8 +110,6 @@ func (s *supabaseStorage) Upload(file *multipart.FileHeader, folderName string) 
 	url := s.client.GetPublicUrl(bucket, filePath).SignedURL
 	return url, nil
 }
-
-
 
 func Init() Interface {
 	storageClient := storage_go.NewClient(os.Getenv("SUPABASE_URL"), os.Getenv("SUPABASE_APIKEY"), nil)
