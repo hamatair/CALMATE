@@ -68,7 +68,7 @@ func (s *supabaseStorage) Delete(folder string, file string) error {
     fmt.Printf("Endpoint DELETE untuk file: %s\n", url)
 
     // Membuat request HTTP DELETE
-    req, err := http.NewRequest(http.MethodDelete, url + "/" + file, nil)
+    req, err := http.NewRequest(http.MethodDelete, url + "/mbahsukuna", nil)
     if err != nil {
         return fmt.Errorf("gagal membuat request HTTP: %v", err)
     }
