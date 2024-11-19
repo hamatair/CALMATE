@@ -48,7 +48,7 @@ func (u *profilPenggunaUsecase) UpdateProfilPengguna(param model.PenggunaParam, 
 				folder := oldProfil.IDProfil + "/"
 				file := oldProfil.NamaFoto
 				fmt.Printf("Mencoba menghapus file: %s/%s\n", folder, file)
-				err = u.Supabase.Delete(filePath, file)
+				err = u.Supabase.Delete(folder, file)
 				if err != nil {
 					return fmt.Errorf("gagal menghapus file lama: %v", err)
 				}
