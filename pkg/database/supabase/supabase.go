@@ -64,7 +64,7 @@ func (s *supabaseStorage) Delete(folder string, file string) error {
     }
 
     // URL endpoint Supabase untuk menghapus file
-    url := fmt.Sprintf("%s/storage/object/%s/%s", os.Getenv("SUPABASE_URL"), bucketName, folder+file)
+    url := fmt.Sprintf("%s/object/%s/%s", os.Getenv("SUPABASE_URL"), bucketName, folder+file)
     fmt.Printf("Endpoint DELETE untuk file: %s\n", url)
 
     // Membuat request HTTP DELETE
