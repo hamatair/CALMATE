@@ -106,7 +106,7 @@ func (s *supabaseStorage) Delete(filePath string) error {
 // Fungsi tambahan untuk mengambil daftar file
 func (s *supabaseStorage) ListObjects(bucketName, path string) ([]string, error) {
 	// URL endpoint untuk list objek
-	url := fmt.Sprintf("%s/object/public/list/%s", os.Getenv("SUPABASE_URL"), bucketName)
+	url := fmt.Sprintf("%s/object/public/%s", os.Getenv("SUPABASE_URL"), bucketName)
 
 	// Membuat body request untuk list objek
 	body := map[string]interface{}{
