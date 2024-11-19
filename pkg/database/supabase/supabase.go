@@ -101,11 +101,7 @@ func (s *supabaseStorage) Delete(folder string, file string) error {
         return fmt.Errorf("file tidak ditemukan: %s (status code: 404), response: %s", folder, string(body))
     }
 
-    if resp.StatusCode != http.StatusNoContent {
-        return fmt.Errorf("gagal menghapus file %s (status code: %d), response: %s", folder, resp.StatusCode, string(body))
-    }
-
-    fmt.Printf("File %s berhasil dihapus dari bucket %s\n", folder, bucketName)
+    fmt.Printf("File %s berhasil dihapus dari bucket %s\n", folder+file, bucketName)
     return nil
 }
 
